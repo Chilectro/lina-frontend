@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 function App() {
   const metaTotal = 1785000;
   // 1. Convertimos el recaudado en un valor dinámico
-  const [recaudado, setRecaudado] = useState(1059000);
+  const [recaudado, setRecaudado] = useState(1190000);
   
   // Aseguramos que la barra no pase del 100% visualmente
   const porcentaje = Math.min((recaudado / metaTotal) * 100, 100);
