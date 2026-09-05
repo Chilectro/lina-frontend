@@ -89,13 +89,17 @@ function App() {
               <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mb-1">
                 {idioma === 'es' ? 'Recaudado' : 'Raised'}
               </p>
-              <p className="text-4xl font-black text-slate-800 tracking-tight">${recaudado.toLocaleString('es-CL')}</p>
+              <p className="text-4xl font-black text-slate-800 tracking-tight">
+                ${recaudado.toLocaleString('es-CL')} <span className="text-xl text-slate-400 font-bold ml-1">CLP</span>
+              </p>
             </div>
             <div className="text-right">
               <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mb-1">
                 {idioma === 'es' ? 'Meta' : 'Goal'}
               </p>
-              <p className="text-xl font-bold text-slate-400">${metaTotal.toLocaleString('es-CL')}</p>
+              <p className="text-xl font-bold text-slate-500">
+                ${metaTotal.toLocaleString('es-CL')} <span className="text-sm font-semibold">CLP</span>
+              </p>
             </div>
           </div>
           
@@ -109,7 +113,7 @@ function App() {
             <Activity size={18} />
             <span>
               {idioma === 'es' 
-                ? `¡Solo faltan ${(metaTotal - recaudado).toLocaleString('es-CL')}!` 
+                ? `¡Solo faltan ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP!` 
                 : `Only ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP to go!`}
             </span>
           </div>
