@@ -165,6 +165,25 @@ function App() {
               </div>
             </div>
           </div>
+
+          {/* Bloque 3: El camino a la recuperación */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="order-2 md:order-1">
+                <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                  {idioma === 'es' ? 'El camino a la recuperación' : 'The road to recovery'}
+                </h3>
+                <p className="text-slate-600 text-lg leading-relaxed">
+                  {idioma === 'es' 
+                    ? 'Entrar a pabellón fue el primer paso. Para que su cuerpo forme una "falsa articulación" y vuelva a correr feliz, Lina requiere un proceso estricto de 10 a 15 sesiones de fisioterapia. Si no logramos costear esta rehabilitación, podría perder la movilidad.'
+                    : 'Surgery was just the first step. For her body to form a "false joint" and for her to run happily again, Lina requires a strict process of 10 to 15 physical therapy sessions. If we can’t afford this rehab, she could lose her mobility permanently.'}
+                </p>
+              </div>
+              <div className="order-1 md:order-2">
+                <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border-4 border-slate-50 bg-slate-200">
+                  <img src="/lina-durmiendo.jpg" alt="Lina descansando" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                </div>
+              </div>
+            </div>
           
           {/* Carrusel Simplificado para no hacer el código gigante */}
           <div className="mt-16 pt-10 border-t border-slate-100">
