@@ -10,6 +10,7 @@ function App() {
   const [idioma, setIdioma] = useState('es');
   
   const porcentaje = Math.min((recaudado / metaTotal) * 100, 100);
+  const metaAlcanzada = recaudado >= metaTotal;
 
   useEffect(() => {
     const ws = new WebSocket("wss://backend-lina.onrender.com/ws");
@@ -80,11 +81,11 @@ function App() {
           </div>
         </motion.header>
 
-        {/* Tarjeta de Progreso */}
-        <motion.section initial="hidden" animate="visible" variants={fadeInUp} className="bg-white/60 backdrop-blur-xl p-8 rounded-[2rem] shadow-xl border border-white mx-4 md:mx-0 mb-12 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-400 via-orange-400 to-rose-400"></div>
+        {/* Tarjeta de Progreso con el Perrito en Pixel Art */}
+        <motion.section initial="hidden" animate="visible" variants={fadeInUp} className="bg-white/60 backdrop-blur-xl p-8 rounded-[2rem] shadow-xl border border-white mx-4 md:mx-0 mb-12 relative overflow-visible">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-400 via-orange-400 to-rose-400 rounded-t-[2rem]"></div>
           
-          <div className="flex justify-between items-end mb-4">
+          <div className="flex justify-between items-end mb-6">
             <div>
               <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mb-1">
                 {idioma === 'es' ? 'Recaudado' : 'Raised'}
@@ -103,18 +104,39 @@ function App() {
             </div>
           </div>
           
-          <div className="w-full bg-slate-200/80 rounded-full h-6 mb-4 overflow-hidden shadow-inner p-1">
-            <motion.div initial={{ width: 0 }} animate={{ width: `${porcentaje}%` }} transition={{ duration: 1.5, delay: 0.2 }} className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-full rounded-full relative shadow-md">
-              <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
-            </motion.div>
+          {/* Contenedor de la barra con el perrito caminante encima */}
+          <div className="relative pt-8 pb-2 mb-4">
+            {/* Perrito en Pixel Art animado según el porcentaje */}
+            <div 
+              className="absolute -top-1 transition-all duration-700 ease-out flex flex-col items-center"
+              style={{ left: `${porcentaje}%`, transform: 'translateX(-50%)' }}
+            >
+              <div className="bg-slate-800 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md mb-1 whitespace-nowrap">
+                {Math.round(porcentaje)}%
+              </div>
+              {/* Diseño en bloques (pixel art simplificado del perrito) */}
+              <div className="relative w-7 h-5 bg-amber-700 rounded-sm shadow-sm flex items-center justify-center">
+                <div className="absolute -left-1 top-0 w-2.5 h-2.5 bg-amber-800 rounded-xs"></div> {/* Orejita */}
+                <span className="text-[10px]">🐶</span>
+              </div>
+            </div>
+
+            {/* Barra de progreso */}
+            <div className="w-full bg-slate-200/80 rounded-full h-6 overflow-hidden shadow-inner p-1">
+              <motion.div initial={{ width: 0 }} animate={{ width: `${porcentaje}%` }} transition={{ duration: 1.5, delay: 0.2 }} className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-full rounded-full relative shadow-md">
+                <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
+              </motion.div>
+            </div>
           </div>
           
           <div className="flex justify-center items-center gap-2 text-rose-600 font-bold bg-rose-50 py-2 px-4 rounded-xl w-fit mx-auto">
             <Activity size={18} />
             <span>
-              {idioma === 'es' 
-                ? `¡Solo faltan ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP!` 
-                : `Only ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP to go!`}
+              {metaAlcanzada
+                ? (idioma === 'es' ? '¡Meta cumplida con éxito! 🎉' : 'Goal successfully reached! 🎉')
+                : (idioma === 'es' 
+                    ? `¡Solo faltan ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP!` 
+                    : `Only ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP to go!`)}
             </span>
           </div>
         </motion.section>
@@ -171,25 +193,25 @@ function App() {
           </div>
 
           {/* Bloque 3: El camino a la recuperación */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div className="order-2 md:order-1">
-                <h3 className="text-2xl font-bold text-slate-800 mb-4">
-                  {idioma === 'es' ? 'El camino a la recuperación' : 'The road to recovery'}
-                </h3>
-                <p className="text-slate-600 text-lg leading-relaxed">
-                  {idioma === 'es' 
-                    ? 'Entrar a pabellón fue el primer paso. Para que su cuerpo forme una "falsa articulación" y vuelva a correr feliz, Lina requiere un proceso estricto de 10 a 15 sesiones de fisioterapia. Si no logramos costear esta rehabilitación, podría perder la movilidad.'
-                    : 'Surgery was just the first step. For her body to form a "false joint" and for her to run happily again, Lina requires a strict process of 10 to 15 physical therapy sessions. If we can’t afford this rehab, she could lose her mobility permanently.'}
-                </p>
-              </div>
-              <div className="order-1 md:order-2">
-                <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border-4 border-slate-50 bg-slate-200">
-                  <img src="/lina-durmiendo.jpg" alt="Lina descansando" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+            <div className="order-2 md:order-1">
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                {idioma === 'es' ? 'El camino a la recuperación' : 'The road to recovery'}
+              </h3>
+              <p className="text-slate-600 text-lg leading-relaxed">
+                {idioma === 'es' 
+                  ? 'Entrar a pabellón fue el primer paso. Para que su cuerpo forme una "falsa articulación" y vuelva a correr feliz, Lina requiere un proceso estricto de 10 a 15 sesiones de fisioterapia. Si no logramos costear esta rehabilitación, podría perder la movilidad.'
+                  : 'Surgery was just the first step. For her body to form a "false joint" and for her to run happily again, Lina requires a strict process of 10 to 15 physical therapy sessions. If we can’t afford this rehab, she could lose her mobility permanently.'}
+              </p>
+            </div>
+            <div className="order-1 md:order-2">
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border-4 border-slate-50 bg-slate-200">
+                <img src="/lina-durmiendo.jpg" alt="Lina descansando" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
               </div>
             </div>
+          </div>
           
-          {/* Carrusel Simplificado para no hacer el código gigante */}
+          {/* Carrusel Simplificado */}
           <div className="mt-16 pt-10 border-t border-slate-100">
             <h3 className="text-2xl font-bold text-slate-800 mb-6 text-center">
               {idioma === 'es' ? 'Las mil y un caras de Lina 🐾' : 'The many faces of Lina 🐾'}
@@ -205,29 +227,50 @@ function App() {
           </div>
         </motion.section>
 
-        {/* Botones de Donación */}
+        {/* Sección de Donación o Mensaje de Agradecimiento Bloqueado */}
         <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="bg-gradient-to-br from-rose-500 to-orange-500 p-8 md:p-10 rounded-[2.5rem] shadow-2xl mx-4 md:mx-0 text-center relative overflow-hidden">
-          <h2 className="text-3xl font-black text-white mb-3 relative z-10">
-            {idioma === 'es' ? '¡Crucemos la meta juntos!' : 'Let’s cross the finish line together!'}
-          </h2>
-          <p className="text-rose-100 text-lg mb-8 relative z-10">
-            {idioma === 'es' ? 'Tu apoyo hace la diferencia en su rehabilitación.' : 'Your support makes a huge difference in her rehab.'}
-          </p>
           
-          <div className="flex flex-col md:flex-row gap-4 relative z-10 mb-8">
-            <a href="https://link.mercadopago.cl/ayudalina" target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-1 bg-white text-rose-600 hover:bg-slate-50 font-black py-4 px-6 rounded-2xl transition-transform hover:scale-[1.02] shadow-xl">
-              <div className="flex items-center gap-2 text-lg"><CreditCard size={20} /> {idioma === 'es' ? 'Aportar desde Chile' : 'Donate from Chile'}</div>
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Mercado Pago</span>
-            </a>
+          {!metaAlcanzada ? (
+            /* Botones normales de donación mientras falte dinero */
+            <>
+              <h2 className="text-3xl font-black text-white mb-3 relative z-10">
+                {idioma === 'es' ? '¡Crucemos la meta juntos!' : 'Let’s cross the finish line together!'}
+              </h2>
+              <p className="text-rose-100 text-lg mb-8 relative z-10">
+                {idioma === 'es' ? 'Tu apoyo hace la diferencia en su rehabilitación.' : 'Your support makes a huge difference in her rehab.'}
+              </p>
+              
+              <div className="flex flex-col md:flex-row gap-4 relative z-10 mb-8">
+                <a href="https://link.mercadopago.cl/ayudalina" target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-1 bg-white text-rose-600 hover:bg-slate-50 font-black py-4 px-6 rounded-2xl transition-transform hover:scale-[1.02] shadow-xl">
+                  <div className="flex items-center gap-2 text-lg"><CreditCard size={20} /> {idioma === 'es' ? 'Aportar desde Chile' : 'Donate from Chile'}</div>
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Mercado Pago</span>
+                </a>
 
-            <a href="https://www.paypal.me/AyudaLina" target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-1 bg-blue-600 text-white hover:bg-blue-700 font-black py-4 px-6 rounded-2xl transition-transform hover:scale-[1.02] shadow-xl">
-              <div className="flex items-center gap-2 text-lg">
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/></svg>
-                {idioma === 'es' ? 'Aporte Internacional' : 'International Donation'}
+                <a href="https://www.paypal.me/AyudaLina" target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-1 bg-blue-600 text-white hover:bg-blue-700 font-black py-4 px-6 rounded-2xl transition-transform hover:scale-[1.02] shadow-xl">
+                  <div className="flex items-center gap-2 text-lg">
+                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z"/></svg>
+                    {idioma === 'es' ? 'Aporte Internacional' : 'International Donation'}
+                  </div>
+                  <span className="text-xs font-semibold text-blue-200 uppercase tracking-wider">PayPal</span>
+                </a>
               </div>
-              <span className="text-xs font-semibold text-blue-200 uppercase tracking-wider">PayPal</span>
-            </a>
-          </div>
+            </>
+          ) : (
+            /* Bloqueo de pagos y mensaje de agradecimiento con globos y confeti visual al llegar al 100% */
+            <div className="py-6 text-white relative z-10 space-y-4">
+              <div className="text-4xl">🎈 🐶 🎈 ✨ 🎊</div>
+              <h2 className="text-3xl md:text-4xl font-black">
+                {idioma === 'es' ? '¡Meta Cumplida! Pagos Bloqueados' : 'Goal Reached! Payments Locked'}
+              </h2>
+              <p className="text-lg text-rose-100 max-w-lg mx-auto leading-relaxed">
+                {idioma === 'es' 
+                  ? 'Hemos alcanzado el 100% de la recaudación. Los botones de pago se han cerrado automáticamente. ¡De todo corazón, mil gracias a todos los que hicieron esto posible para Lina! ❤️🐾'
+                  : 'We have reached 100% of our goal. Payment buttons are now closed. From the bottom of our hearts, thank you everyone who made this possible for Lina! ❤️🐾'}
+              </p>
+              <div className="text-3xl">🎉 💖 🎈 🎉 🌟</div>
+            </div>
+          )}
+
         </motion.section>
 
       </main>
