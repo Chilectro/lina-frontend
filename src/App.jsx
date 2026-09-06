@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, Camera, CreditCard, Activity, Globe, Sparkles } from 'lucide-react';
+import { Heart, Camera, CreditCard, Activity, Globe, Sparkles, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function App() {
@@ -28,6 +28,23 @@ function App() {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
+
+  // DIARIO DE RECUPERACIÓN DE LINA
+  const actualizaciones = [
+    {
+      id: 1,
+      dia: idioma === 'es' ? 'Día 2 Post-Operación' : 'Day 2 Post-Op',
+      fecha: '6 de Septiembre',
+      texto: idioma === 'es' 
+        ? '¡Lina ya está en casa descansando! Aún está con su conito y un poco cansada por los medicamentos, pero ha sido muy valiente. Aquí les compartimos un poquito de su día.'
+        : 'Lina is resting at home! Still wearing her cone and a bit tired from the meds, but she has been very brave. Here is a little glimpse of her day.',
+      media: [
+        { url: '/dia2.jpg', tipo: 'img' },
+        { url: '/video1.mp4', tipo: 'video' },
+        { url: '/video2.mp4', tipo: 'video' }
+      ]
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-50 via-orange-50 to-rose-50 font-sans text-slate-800 pb-20 selection:bg-rose-200 relative overflow-hidden">
@@ -221,6 +238,58 @@ function App() {
               <div className="snap-center shrink-0 w-64 md:w-72 h-80 rounded-3xl overflow-hidden shadow-lg border-2 border-slate-50 relative"><img src="/lina-vaquita.jpg" className="w-full h-full object-cover" /></div>
               <div className="snap-center shrink-0 w-64 md:w-72 h-80 rounded-3xl overflow-hidden shadow-lg border-2 border-slate-50 relative"><img src="/lina-amarillo.jpg" className="w-full h-full object-cover" /></div>
             </div>
+          </div>
+        </motion.section>
+
+        {/* Diario de Recuperación */}
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUp} className="bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-slate-100 mx-4 md:mx-0 mb-12">
+          <div className="flex items-center gap-3 mb-8 border-b border-slate-100 pb-6">
+            <div className="bg-emerald-100 p-3 rounded-2xl">
+              <Calendar className="text-emerald-600 w-6 h-6" />
+            </div>
+            <h2 className="text-3xl font-extrabold text-slate-800">
+              {idioma === 'es' ? 'Diario de Recuperación' : 'Recovery Diary'}
+            </h2>
+          </div>
+
+          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-1 before:bg-gradient-to-b before:from-emerald-400 before:to-rose-400">
+            
+            {actualizaciones.map((act) => (
+              <div key={act.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                
+                {/* Punto en la línea de tiempo */}
+                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-emerald-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
+                  <Heart size={16} className="fill-white" />
+                </div>
+                
+                {/* Tarjeta de la actualización */}
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-md border border-slate-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold text-slate-800 text-lg">{act.dia}</h3>
+                    <span className="text-sm font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">{act.fecha}</span>
+                  </div>
+                  <p className="text-slate-600 mb-4 leading-relaxed">
+                    {act.texto}
+                  </p>
+                  
+                  {/* Mini Galería de Fotos y Videos */}
+                  {act.media && act.media.length > 0 && (
+                    <div className={`mt-4 grid gap-3 ${act.media.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+                      {act.media.map((item, index) => (
+                        <div key={index} className="rounded-xl overflow-hidden shadow-sm bg-slate-100 flex items-center justify-center bg-black/5">
+                          {item.tipo === 'video' ? (
+                            <video src={item.url} controls preload="metadata" className="w-full h-auto max-h-64 object-contain rounded-xl" />
+                          ) : (
+                            <img src={item.url} alt={`${act.dia} - archivo ${index + 1}`} className="w-full h-auto max-h-64 object-cover rounded-xl hover:scale-105 transition-transform" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
           </div>
         </motion.section>
 
