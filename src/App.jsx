@@ -8,7 +8,7 @@ function App() {
   
   // ESTADO PARA EL IDIOMA (ES = Español, EN = Inglés)
   const [idioma, setIdioma] = useState('es');
-  
+  const [diaActivo, setDiaActivo] = useState(1);
   const porcentaje = Math.min((recaudado / metaTotal) * 100, 100);
   const metaCumplida = recaudado >= metaTotal;
 
@@ -241,8 +241,8 @@ function App() {
           </div>
         </motion.section>
 
-        {/* Diario de Recuperación */}
-        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUp} className="bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-slate-100 mx-4 md:mx-0 mb-12">
+        {/* Diario de Recuperación (Formato Bitácora) */}
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeInUp} className="bg-white/80 backdrop-blur-md p-6 md:p-10 rounded-[2.5rem] shadow-xl border border-slate-100 mx-4 md:mx-0 mb-12">
           <div className="flex items-center gap-3 mb-8 border-b border-slate-100 pb-6">
             <div className="bg-emerald-100 p-3 rounded-2xl">
               <Calendar className="text-emerald-600 w-6 h-6" />
@@ -252,44 +252,57 @@ function App() {
             </h2>
           </div>
 
-          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-1 before:bg-gradient-to-b before:from-emerald-400 before:to-rose-400">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-8">
             
-            {actualizaciones.map((act) => (
-              <div key={act.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                
-                {/* Punto en la línea de tiempo */}
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-emerald-500 text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
-                  <Heart size={16} className="fill-white" />
-                </div>
-                
-                {/* Tarjeta de la actualización */}
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-6 rounded-2xl shadow-md border border-slate-50">
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-bold text-slate-800 text-lg">{act.dia}</h3>
-                    <span className="text-sm font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">{act.fecha}</span>
-                  </div>
-                  <p className="text-slate-600 mb-4 leading-relaxed">
+            {/* Menú Lateral: Selector de Días (Scrollable) */}
+            <div className="w-full md:w-1/3 flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto md:max-h-[600px] pb-4 md:pb-0 snap-x hide-scroll-bar">
+              {actualizaciones.map((act) => (
+                <button 
+                  key={act.id}
+                  onClick={() => setDiaActivo(act.id)}
+                  className={`text-left shrink-0 w-60 md:w-full p-4 rounded-2xl transition-all border-2 snap-start ${diaActivo === act.id ? 'border-emerald-500 bg-emerald-50 shadow-md' : 'border-transparent bg-slate-50 hover:bg-slate-100'}`}
+                >
+                  <h3 className={`font-bold text-lg ${diaActivo === act.id ? 'text-emerald-700' : 'text-slate-700'}`}>{act.dia}</h3>
+                  <p className={`text-sm font-semibold mt-1 ${diaActivo === act.id ? 'text-emerald-600/70' : 'text-slate-400'}`}>{act.fecha}</p>
+                </button>
+              ))}
+            </div>
+
+            {/* Pantalla Principal: Contenido del Día Seleccionado */}
+            <div className="w-full md:w-2/3 bg-white rounded-3xl p-0 md:p-2">
+              {actualizaciones.filter(a => a.id === diaActivo).map(act => (
+                <div key={act.id} className="animate-in fade-in duration-500">
+                  <p className="text-slate-700 text-lg md:text-xl leading-relaxed mb-6 font-medium bg-slate-50 p-6 rounded-2xl border border-slate-100">
                     {act.texto}
                   </p>
                   
-                  {/* Mini Galería de Fotos y Videos (Estilo Carrusel) */}
+                  {/* Fotos y Videos en Formato Grande */}
                   {act.media && act.media.length > 0 && (
-                    <div className={`mt-4 ${act.media.length === 1 ? 'flex' : 'flex overflow-x-auto pb-4 snap-x snap-mandatory hide-scroll-bar'} gap-3`}>
+                    <div className="space-y-6">
                       {act.media.map((item, index) => (
-                        <div key={index} className={`${act.media.length === 1 ? 'w-full' : 'snap-center shrink-0 w-64 md:w-72'} h-64 rounded-xl overflow-hidden bg-black/5 border border-slate-100 flex items-center justify-center shadow-sm relative`}>
+                        <div key={index} className="w-full rounded-2xl overflow-hidden bg-black/5 border border-slate-100 shadow-sm flex justify-center">
                           {item.tipo === 'video' ? (
-                            <video src={item.url} controls preload="metadata" className="w-full h-full object-contain bg-black" />
+                            <video 
+                              src={item.url} 
+                              controls 
+                              preload="metadata" 
+                              className="w-full max-h-[65vh] object-contain bg-black rounded-2xl" 
+                            />
                           ) : (
-                            <img src={item.url} alt={`${act.dia} - archivo ${index + 1}`} className="w-full h-full object-cover" />
+                            <img 
+                              src={item.url} 
+                              alt={`${act.dia} - archivo ${index + 1}`} 
+                              className="w-full max-h-[65vh] object-contain rounded-2xl" 
+                            />
                           )}
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
-              </div>
-            ))}
-            
+              ))}
+            </div>
+
           </div>
         </motion.section>
 
