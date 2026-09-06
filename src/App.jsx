@@ -36,8 +36,8 @@ function App() {
       dia: idioma === 'es' ? 'Día 2 Post-Operación' : 'Day 2 Post-Op',
       fecha: '6 de Septiembre',
       texto: idioma === 'es' 
-        ? '¡Lina ya está en casa descansando! Aún está con su conito y un poco cansada por los medicamentos, pero ha sido muy valiente. Aquí les compartimos un poquito de su día.'
-        : 'Lina is resting at home! Still wearing her cone and a bit tired from the meds, but she has been very brave. Here is a little glimpse of her day.',
+        ? 'Lina sigue internada en la clínica veterinaria bajo observación. Aún está con su conito y su suero, cansada por los medicamentos, pero siendo muy valiente. ¡Paso a paso, mi niña!'
+        : 'Lina is still hospitalized at the vet clinic under observation. She is still wearing her cone and IV, tired from the meds, but being very brave. Step by step, my girl!',
       media: [
         { url: '/dia2.jpg', tipo: 'img' },
         { url: '/video1.mp4', tipo: 'video' },
@@ -272,15 +272,15 @@ function App() {
                     {act.texto}
                   </p>
                   
-                  {/* Mini Galería de Fotos y Videos */}
+                  {/* Mini Galería de Fotos y Videos (Estilo Carrusel) */}
                   {act.media && act.media.length > 0 && (
-                    <div className={`mt-4 grid gap-3 ${act.media.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+                    <div className={`mt-4 ${act.media.length === 1 ? 'flex' : 'flex overflow-x-auto pb-4 snap-x snap-mandatory hide-scroll-bar'} gap-3`}>
                       {act.media.map((item, index) => (
-                        <div key={index} className="rounded-xl overflow-hidden shadow-sm bg-slate-100 flex items-center justify-center bg-black/5">
+                        <div key={index} className={`${act.media.length === 1 ? 'w-full' : 'snap-center shrink-0 w-64 md:w-72'} h-64 rounded-xl overflow-hidden bg-black/5 border border-slate-100 flex items-center justify-center shadow-sm relative`}>
                           {item.tipo === 'video' ? (
-                            <video src={item.url} controls preload="metadata" className="w-full h-auto max-h-64 object-contain rounded-xl" />
+                            <video src={item.url} controls preload="metadata" className="w-full h-full object-contain bg-black" />
                           ) : (
-                            <img src={item.url} alt={`${act.dia} - archivo ${index + 1}`} className="w-full h-auto max-h-64 object-cover rounded-xl hover:scale-105 transition-transform" />
+                            <img src={item.url} alt={`${act.dia} - archivo ${index + 1}`} className="w-full h-full object-cover" />
                           )}
                         </div>
                       ))}
