@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart, Camera, CreditCard, Activity, Globe } from 'lucide-react';
+import { Heart, Camera, CreditCard, Activity, Globe, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
   const [idioma, setIdioma] = useState('es');
   
   const porcentaje = Math.min((recaudado / metaTotal) * 100, 100);
-  const metaAlcanzada = recaudado >= metaTotal;
+  const metaCumplida = recaudado >= metaTotal;
 
   useEffect(() => {
     const ws = new WebSocket("wss://backend-lina.onrender.com/ws");
@@ -30,7 +30,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-50 via-orange-50 to-rose-50 font-sans text-slate-800 pb-20 selection:bg-rose-200">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-50 via-orange-50 to-rose-50 font-sans text-slate-800 pb-20 selection:bg-rose-200 relative overflow-hidden">
       
       {/* Botón Flotante de Idioma */}
       <div className="fixed top-4 right-4 z-50">
@@ -81,11 +81,11 @@ function App() {
           </div>
         </motion.header>
 
-        {/* Tarjeta de Progreso con el Perrito en Pixel Art */}
-        <motion.section initial="hidden" animate="visible" variants={fadeInUp} className="bg-white/60 backdrop-blur-xl p-8 rounded-[2rem] shadow-xl border border-white mx-4 md:mx-0 mb-12 relative overflow-visible">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-400 via-orange-400 to-rose-400 rounded-t-[2rem]"></div>
+        {/* Tarjeta de Progreso */}
+        <motion.section initial="hidden" animate="visible" variants={fadeInUp} className="bg-white/60 backdrop-blur-xl p-8 rounded-[2rem] shadow-xl border border-white mx-4 md:mx-0 mb-12 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-400 via-orange-400 to-rose-400"></div>
           
-          <div className="flex justify-between items-end mb-6">
+          <div className="flex justify-between items-end mb-4">
             <div>
               <p className="text-sm text-slate-500 font-bold uppercase tracking-widest mb-1">
                 {idioma === 'es' ? 'Recaudado' : 'Raised'}
@@ -104,39 +104,36 @@ function App() {
             </div>
           </div>
           
-          {/* Contenedor de la barra con el perrito caminante encima */}
-          <div className="relative pt-8 pb-2 mb-4">
-            {/* Perrito en Pixel Art animado según el porcentaje */}
-            <div 
-              className="absolute -top-1 transition-all duration-700 ease-out flex flex-col items-center"
-              style={{ left: `${porcentaje}%`, transform: 'translateX(-50%)' }}
-            >
-              <div className="bg-slate-800 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-md mb-1 whitespace-nowrap">
-                {Math.round(porcentaje)}%
-              </div>
-              {/* Diseño en bloques (pixel art simplificado del perrito) */}
-              <div className="relative w-7 h-5 bg-amber-700 rounded-sm shadow-sm flex items-center justify-center">
-                <div className="absolute -left-1 top-0 w-2.5 h-2.5 bg-amber-800 rounded-xs"></div> {/* Orejita */}
-                <span className="text-[10px]">🐶</span>
-              </div>
-            </div>
+          {/* Barra de Progreso */}
+          <div className="w-full bg-slate-200/80 rounded-full h-6 mb-2 overflow-hidden shadow-inner p-1 relative">
+            <motion.div initial={{ width: 0 }} animate={{ width: `${porcentaje}%` }} transition={{ duration: 1.5, delay: 0.2 }} className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-full rounded-full relative shadow-md">
+              <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
+            </motion.div>
+          </div>
 
-            {/* Barra de progreso */}
-            <div className="w-full bg-slate-200/80 rounded-full h-6 overflow-hidden shadow-inner p-1">
-              <motion.div initial={{ width: 0 }} animate={{ width: `${porcentaje}%` }} transition={{ duration: 1.5, delay: 0.2 }} className="bg-gradient-to-r from-emerald-400 to-emerald-500 h-full rounded-full relative shadow-md">
-                <div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div>
-              </motion.div>
+          {/* PERRITO NERVIOSO CAMINANDO DE IZQUIERDA A DERECHA */}
+          <div className="relative w-full h-8 mb-4">
+            <div 
+              className="absolute transition-all duration-1000 ease-out flex flex-col items-center"
+              style={{ left: `calc(${porcentaje}% - 16px)` }}
+            >
+              <motion.span 
+                animate={{ y: [0, -4, 0], rotate: [0, -5, 5, 0] }} 
+                transition={{ repeat: Infinity, duration: 0.6 }}
+                className="text-2xl filter drop-shadow-md select-none"
+                title="¡Lina va en camino a la meta!"
+              >
+                {metaCumplida ? '🐕‍🦺🎉' : '🐕‍🦺'}
+              </motion.span>
             </div>
           </div>
           
           <div className="flex justify-center items-center gap-2 text-rose-600 font-bold bg-rose-50 py-2 px-4 rounded-xl w-fit mx-auto">
             <Activity size={18} />
             <span>
-              {metaAlcanzada
-                ? (idioma === 'es' ? '¡Meta cumplida con éxito! 🎉' : 'Goal successfully reached! 🎉')
-                : (idioma === 'es' 
-                    ? `¡Solo faltan ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP!` 
-                    : `Only ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP to go!`)}
+              {metaCumplida 
+                ? (idioma === 'es' ? '¡Meta 100% cumplida! 🎉' : 'Goal 100% reached! 🎉')
+                : (idioma === 'es' ? `¡Solo faltan ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP!` : `Only ${(metaTotal - recaudado).toLocaleString('es-CL')} CLP to go!`)}
             </span>
           </div>
         </motion.section>
@@ -193,7 +190,7 @@ function App() {
           </div>
 
           {/* Bloque 3: El camino a la recuperación */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
               <h3 className="text-2xl font-bold text-slate-800 mb-4">
                 {idioma === 'es' ? 'El camino a la recuperación' : 'The road to recovery'}
@@ -227,20 +224,44 @@ function App() {
           </div>
         </motion.section>
 
-        {/* Sección de Donación o Mensaje de Agradecimiento Bloqueado */}
-        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="bg-gradient-to-br from-rose-500 to-orange-500 p-8 md:p-10 rounded-[2.5rem] shadow-2xl mx-4 md:mx-0 text-center relative overflow-hidden">
+        {/* Sección de Donaciones o Bloqueo por Meta Cumplida con Globos y Confeti */}
+        <motion.section initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className={`p-8 md:p-10 rounded-[2.5rem] shadow-2xl mx-4 md:mx-0 text-center relative overflow-hidden transition-all duration-500 ${metaCumplida ? 'bg-gradient-to-br from-emerald-500 to-teal-600' : 'bg-gradient-to-br from-rose-500 to-orange-500'}`}>
           
-          {!metaAlcanzada ? (
-            /* Botones normales de donación mientras falte dinero */
-            <>
-              <h2 className="text-3xl font-black text-white mb-3 relative z-10">
+          {metaCumplida ? (
+            /* CELEBRACIÓN Y BLOQUEO DE PAGOS AL 100% */
+            <div className="relative z-10 py-4">
+              <div className="absolute -top-10 -left-10 text-6xl animate-bounce">🎈</div>
+              <div className="absolute -top-10 -right-10 text-6xl animate-bounce delay-150">🎉</div>
+              
+              <div className="bg-white/20 backdrop-blur-md p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-white">
+                <Sparkles size={32} />
+              </div>
+
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
+                {idioma === 'es' ? '🎉 ¡LO LOGRAMOS, META CUMPLIDA! 🎉' : '🎉 GOAL REACHED! THANK YOU! 🎉'}
+              </h2>
+              
+              <p className="text-emerald-50 text-lg md:text-xl font-medium max-w-lg mx-auto leading-relaxed mb-6">
+                {idioma === 'es'
+                  ? 'La fisioterapia de Lina está 100% financiada. De corazón, infinitas gracias a todos los que aportaron, leyeron y compartieron. ¡Nuestra gordita ya tiene asegurado su camino para volver a correr sin dolor!'
+                  : 'Lina’s physical therapy is 100% funded. Infinite thanks to everyone who contributed and shared. Our girl is ready to walk and run pain-free again!'}
+              </p>
+
+              <div className="inline-block bg-white text-emerald-700 font-extrabold px-8 py-3 rounded-2xl shadow-lg text-lg">
+                ❤️🐶 ¡Gracias de parte de toda la familia! 🐶❤️
+              </div>
+            </div>
+          ) : (
+            /* BOTONES DE DONACIÓN NORMALES */
+            <div className="relative z-10">
+              <h2 className="text-3xl font-black text-white mb-3">
                 {idioma === 'es' ? '¡Crucemos la meta juntos!' : 'Let’s cross the finish line together!'}
               </h2>
-              <p className="text-rose-100 text-lg mb-8 relative z-10">
+              <p className="text-rose-100 text-lg mb-8">
                 {idioma === 'es' ? 'Tu apoyo hace la diferencia en su rehabilitación.' : 'Your support makes a huge difference in her rehab.'}
               </p>
               
-              <div className="flex flex-col md:flex-row gap-4 relative z-10 mb-8">
+              <div className="flex flex-col md:flex-row gap-4 mb-8">
                 <a href="https://link.mercadopago.cl/ayudalina" target="_blank" rel="noopener noreferrer" className="flex-1 flex flex-col items-center justify-center gap-1 bg-white text-rose-600 hover:bg-slate-50 font-black py-4 px-6 rounded-2xl transition-transform hover:scale-[1.02] shadow-xl">
                   <div className="flex items-center gap-2 text-lg"><CreditCard size={20} /> {idioma === 'es' ? 'Aportar desde Chile' : 'Donate from Chile'}</div>
                   <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Mercado Pago</span>
@@ -254,20 +275,6 @@ function App() {
                   <span className="text-xs font-semibold text-blue-200 uppercase tracking-wider">PayPal</span>
                 </a>
               </div>
-            </>
-          ) : (
-            /* Bloqueo de pagos y mensaje de agradecimiento con globos y confeti visual al llegar al 100% */
-            <div className="py-6 text-white relative z-10 space-y-4">
-              <div className="text-4xl">🎈 🐶 🎈 ✨ 🎊</div>
-              <h2 className="text-3xl md:text-4xl font-black">
-                {idioma === 'es' ? '¡Meta Cumplida! Pagos Bloqueados' : 'Goal Reached! Payments Locked'}
-              </h2>
-              <p className="text-lg text-rose-100 max-w-lg mx-auto leading-relaxed">
-                {idioma === 'es' 
-                  ? 'Hemos alcanzado el 100% de la recaudación. Los botones de pago se han cerrado automáticamente. ¡De todo corazón, mil gracias a todos los que hicieron esto posible para Lina! ❤️🐾'
-                  : 'We have reached 100% of our goal. Payment buttons are now closed. From the bottom of our hearts, thank you everyone who made this possible for Lina! ❤️🐾'}
-              </p>
-              <div className="text-3xl">🎉 💖 🎈 🎉 🌟</div>
             </div>
           )}
 
