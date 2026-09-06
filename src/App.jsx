@@ -43,7 +43,7 @@ function App() {
         { url: '/video1.mp4', tipo: 'video' },
         { url: '/video2.mp4', tipo: 'video' }
       ]
-    }
+    },
     {
       id: 2,
       dia: idioma === 'es' ? 'Día 3 Post-Operación' : 'Day 3 Post-Op',
