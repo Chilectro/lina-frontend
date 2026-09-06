@@ -43,19 +43,6 @@ function App() {
         { url: '/video1.mp4', tipo: 'video' },
         { url: '/video2.mp4', tipo: 'video' }
       ]
-    },
-    {
-      id: 2,
-      dia: idioma === 'es' ? 'Día 3 Post-Operación' : 'Day 3 Post-Op',
-      fecha: '7 de Septiembre',
-      texto: idioma === 'es' 
-        ? 'Lina sigue internada en la clínica veterinaria bajo observación. Aún está con su conito y su suero, cansada por los medicamentos, pero siendo muy valiente. ¡Paso a paso, mi niña!'
-        : 'Lina is still hospitalized at the vet clinic under observation. She is still wearing her cone and IV, tired from the meds, but being very brave. Step by step, my girl!',
-      media: [
-        { url: '/dia2.jpg', tipo: 'img' },
-        { url: '/video1.mp4', tipo: 'video' },
-        { url: '/video2.mp4', tipo: 'video' }
-      ]
     }
   ];
 
