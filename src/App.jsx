@@ -50,8 +50,8 @@ function App() {
       dia: idioma === 'es' ? 'Día 3 - ¡Dada de Alta!' : 'Day 3 - Discharged!',
       fecha: '7 de Septiembre',
       texto: idioma === 'es' 
-        ? '¡Excelentes noticias! A Lina le dieron el alta y ya está en casa. Llegó un poco enojada (su carita enojada.jpg lo dice todo), quizás por el estrés del viaje. Intentó acomodarse en su camita, pero el cono (cono.jpg) le estorbaba muchísimo y no la dejaba descansar bien. Camina cogeando un poco, lo cual es normal después de una cirugía mayor, pero estamos muy contentos de tenerla de vuelta.'
-        : 'Excellent news! Lina was discharged and is now home. She arrived a bit angry (her angry.jpg face says it all), perhaps due to the stress of the trip. She tried to get comfortable in her bed, but the cone (cono.jpg) was getting in the way a lot and wouldn\'t let her rest properly. She is limping a bit, which is normal after major surgery, but we are very happy to have her back.',
+        ? '¡Excelentes noticias! A Lina le dieron el alta y ya está en casa. Llegó un poco enojada (su carita enojada lo dice todo), quizás por el estrés del viaje. Intentó acomodarse en su camita, pero el cono le estorbaba muchísimo y no la dejaba descansar bien. Camina cogeando un poco, lo cual es normal después de una cirugía mayor, pero estamos muy contentos de tenerla de vuelta.'
+        : 'Excellent news! Lina was discharged and is now home. She arrived a bit angry (her angry face says it all), perhaps due to the stress of the trip. She tried to get comfortable in her bed, but the cone was getting in the way a lot and wouldn\'t let her rest properly. She is limping a bit, which is normal after major surgery, but we are very happy to have her back.',
       media: [
         { url: '/enojada.jpg', tipo: 'img' }, // Las fotos nuevas
         { url: '/cono.jpg', tipo: 'img' },
